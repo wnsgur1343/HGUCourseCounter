@@ -1,14 +1,16 @@
 package edu.handong.analysis;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.TreeMap;
 
 import edu.handong.analysis.datamodel.Course;
 import edu.handong.analysis.datamodel.Student;
-import edu.handong.analysise.utils.NotEnoughArgumentException;
-import edu.handong.analysise.utils.Utils;
+import edu.handong.analysis.utils.NotEnoughArgumentException;
+import edu.handong.analysis.utils.Utils;
 
 public class HGUCoursePatternAnalyzer {
 
@@ -54,9 +56,26 @@ public class HGUCoursePatternAnalyzer {
 	 */
 	private HashMap<String,Student> loadStudentCourseRecords(ArrayList<String> lines) {
 		
-		// TODO: Implement this method
+		// TODO: Implement this method 1
+		HashMap<String,Student> newHash = new HashMap<String,Student>();
 		
-		return null; // do not forget to return a proper variable.
+		
+		for(String str : lines) {
+			Course newCourse = new Course(str);
+			Student newStudent = new Student(newCourse.getStudentId());
+			
+			if(newHash.containsKey(newCourse.getStudentId())) {
+				newHash.get(newStudent.getStudentId()).addCourse(newCourse);
+			}
+			else {
+				newStudent.addCourse(newCourse);
+				newHash.put(newStudent.getStudentId(), newStudent);
+			}
+		
+		}
+	
+		
+		return newHash; // do not forget to return a proper variable.
 	}
 
 	/**
@@ -75,7 +94,23 @@ public class HGUCoursePatternAnalyzer {
 	private ArrayList<String> countNumberOfCoursesTakenInEachSemester(Map<String, Student> sortedStudents) {
 		
 		// TODO: Implement this method
+		ArrayList<String> savedList = new ArrayList<String>();
+		int sumOfSemester = 0;
 		
-		return null; // do not forget to return a proper variable.
+		for(Map.Entry<String,Student> entry : sortedStudents.entrySet()) {
+	         Student nowStudent = entry.getValue();
+	         String studentId = nowStudent.getStudentId();
+			
+			sumOfSemester = nowStudent.getSemestersByYearAndSemester().size();
+			
+			for(int j = 1; j<=sumOfSemester; j++) {
+				int numOfCoursesInNthSemester = nowStudent.getNumCourseInNthSemester(j);
+				String savedline = studentId + "," + sumOfSemester + "," + j + "," + numOfCoursesInNthSemester;
+				
+				savedList.add(savedline);
+			}
+		}
+		
+		return savedList; // do not forget to return a proper variable.
 	}
 }
