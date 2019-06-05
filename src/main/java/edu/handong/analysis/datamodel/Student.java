@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.apache.commons.math3.geometry.spherical.oned.ArcsSet.Split;
 
+@SuppressWarnings("unused")
 public class Student {
 	private String studentId;
 	private ArrayList<Course> coursesTaken = new ArrayList<Course>();

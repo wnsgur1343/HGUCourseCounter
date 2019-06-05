@@ -1,10 +1,18 @@
 package edu.handong.analysis.utils;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -33,23 +41,49 @@ public class Utils {
 		return data;
 	}
 	
-	public static void writeAFile(ArrayList<String> lines, String targetFileName) {
-		try {
-	         BufferedWriter fw = new BufferedWriter(new FileWriter(targetFileName));
-	         
-	        fw. write("StudentID"+","+"TotalNumberOfSemestersRegistered"+","+"Semester"+","+" NumCoursesTakenInTheSemester");
-	        fw.newLine();
-	        
-	        for(String result : lines) {
-	        	fw.write(result);
-	        	fw.newLine();
-	        	}
-	        fw.flush();
-            fw.close();
-            
-		} catch(Exception e ) {
-			System.out.println(e.getMessage());
-	        System.out.println("The file path does not exist. Please check your CLI argument!");    
+	
+	
+	
+	public static void writeAFile(ArrayList<String> lines, String targetFileName, int Type) {
+		
+		String FileName = null;
+		String input = targetFileName;
+		
+		for(String targetDirectory : targetFileName.split("/")) {
+			FileName = targetDirectory;
 		}
+		
+		int index = input.indexOf(FileName);
+		String dirName = input.substring(0, index);
+		
+		File dir = new File(dirName);
+		
+		if(!dir.exists()) {
+			dir.mkdirs();
+		}
+		
+		String fileName = targetFileName;
+		PrintWriter outputStream = null;
+		
+		try {
+			outputStream = new PrintWriter(fileName);
+		} catch(FileNotFoundException e) {
+			System.out.println("The file path does not exist. Please check your CLI argument!");
+			System.exit(0);
+		}
+		
+		if(Type == 1) {
+			outputStream.println("StudentID, TotalNumberOfSemestersRegistered, Semester, NumCourse");
+		}
+		if(Type == 2) {
+			outputStream.println("Year, Semester, CourseCode, CourseName, TotalStudents, StudentsTaken, Rate");
+		}
+		
+		for(String line : lines) {
+			outputStream.println(line);
+		}
+		
+		outputStream.close();
 	}
+	
 }
